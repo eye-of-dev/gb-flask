@@ -1,0 +1,10 @@
+POST http://127.0.0.1:5000/
+Content-Type: text/html
+
+{}
+
+###
+GET http://127.0.0.1:5000/
+Accept: text/html
+
+###
