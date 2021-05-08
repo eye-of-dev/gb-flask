@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %} Список пользователей {% endblock %}
+
+{% block body %}
+    <h1>Список пользователей</h1>
+    <div class="list-group">
+        {% for user_id in users %}
+            <a href="{{ url_for('users.users_info', pk=user_id) }}" class="list-group-item list-group-item-action">{{ users[user_id] }}</a>
+        {% endfor %}
+    </div>
+{% endblock %}
