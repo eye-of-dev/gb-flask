@@ -1,11 +1,15 @@
-from flask import Flask, request
+from flask import Flask
 
-app = Flask(__name__)
+from blog.articles.views import articles
+from blog.users.views import users
 
 
-@app.route('/', methods=('GET', 'POST'))
-def hello_gb():
-    if request.method == 'POST':
-        return 'This is POST request', 200
-    else:
-        return 'This is GET request', 200
+def create_app() -> Flask:
+    app = Flask(__name__)
+    register_blueprints(app)
+    return app
+
+
+def register_blueprints(app: Flask):
+    app.register_blueprint(users)
+    app.register_blueprint(articles)
