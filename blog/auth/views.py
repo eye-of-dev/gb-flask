@@ -1,7 +1,9 @@
 from flask import Blueprint, redirect, url_for, render_template, flash, request
 from flask_login import login_required, logout_user, login_user, LoginManager
+from werkzeug.security import generate_password_hash
 
-from blog.auth.models import LoginForm
+from blog.auth.models import LoginForm, RegistrationForm
+from blog.database import db
 from blog.users.models import Users
 
 auth = Blueprint('auth', __name__)
@@ -36,6 +38,24 @@ def login():
         return redirect(next or url_for('users.users_info', pk=user.id))
 
     return render_template('auth/login.html', form=form)
+
+
+@auth.route('/registration', methods=['GET', 'POST'])
+def registration():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = Users(
+            email=form.email.data,
+            password_hash=generate_password_hash(form.password.data),
+            name=form.name.data
+        )
+
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        return redirect(url_for('users.users_info', pk=user.id))
+
+    return render_template('auth/registration.html', form=form)
 
 
 @auth.route('/logout')
